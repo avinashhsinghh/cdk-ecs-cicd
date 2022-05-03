@@ -53,7 +53,7 @@ export class DevPipelineStack extends cdk.Stack {
               commands:[
                 'ECR_APP=329153277240.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$APP_REPOSITORY_URI',
                 'ECR_NGINX=329153277240.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$NGINX_REPOSITORY_URI', 
-                '$(aws ecr get-login-password --no-include-email --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin 329153277240.dkr.ecr.ap-south-1.amazonaws.com)',
+                '$(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)',
               ]
             },
             build: {
