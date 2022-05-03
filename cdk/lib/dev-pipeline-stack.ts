@@ -50,11 +50,7 @@ export class DevPipelineStack extends cdk.Stack {
           version: '0.2',
           phases: {
             pre_build: {
-              commands:[
-                'ECR_APP=329153277240.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$APP_REPOSITORY_URI',
-                'ECR_NGINX=329153277240.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$NGINX_REPOSITORY_URI', 
-                '$(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)',
-              ]
+              commands: '$(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)',
             },
             build: {
               commands:[
@@ -64,10 +60,8 @@ export class DevPipelineStack extends cdk.Stack {
             },
             post_build: {
               commands: [
-                'docker tag $APP_REPOSITORY_URI:$CODEBUILD_RESOLVED_SOURCE_VERSION $ECR_APP:$CODEBUILD_RESOLVED_SOURCE_VERSION',
-                'docker tag $NGINX_REPOSITORY_URI:$CODEBUILD_RESOLVED_SOURCE_VERSION $ECR_NGINX:$CODEBUILD_RESOLVED_SOURCE_VERSION',
-                'docker push $ECR_APP:$CODEBUILD_RESOLVED_SOURCE_VERSION',
-                'docker push $ECR_NGINX:$CODEBUILD_RESOLVED_SOURCE_VERSION',
+                'docker push $APP_REPOSITORY_URI:$CODEBUILD_RESOLVED_SOURCE_VERSION',
+                'docker push $NGINX_REPOSITORY_URI:$CODEBUILD_RESOLVED_SOURCE_VERSION',
                 `printf '{ "imageTag": "'$CODEBUILD_RESOLVED_SOURCE_VERSION'" }' > imageTag.json`,
                 'aws ssm put-parameter --name "' + ssmImageTagParamName + '" --value $CODEBUILD_RESOLVED_SOURCE_VERSION --type String --overwrite'
               ],
